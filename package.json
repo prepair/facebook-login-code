@@ -1,0 +1,14 @@
+{
+  "name": "facebook-login-code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server ."
+  },
+  "author": "Zsolt Vad",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^0.10.0"
+  }
+}
