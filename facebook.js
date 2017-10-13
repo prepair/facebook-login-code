@@ -4,7 +4,8 @@
     blocked: 'Popup has been blocked by your browser',
     timeout: 'Timeout',
     closed: 'Popup has been closed',
-    existing: 'Popup already exists'
+    existing: 'Popup already exists',
+    unauthorized: 'Unauthorized'
   };
 
   class Facebook {
@@ -15,6 +16,7 @@
       this.dialogUrl = options.dialogUrl || 'https://graph.facebook.com/oauth/authorize';
       this.dialogDisplay = options.dialogDisplay || 'popup';
       this.dialogDimension = options.dialogDimension || { width: 650, height: 562 };
+      this.apiUrl = options.apiUrl || 'https://graph.facebook.com/v2.10';
       this.pollingInterval = options.pollingInterval || 20;
       this.pollingTimeout = options.pollingTimeout || 60 * 1000;
 
@@ -30,7 +32,7 @@
 
         // Open popup with specific URL
         let redirectUri = this.getRedirectUri();
-        let dialogUrlParameters = this.getDialogUrlParameters({
+        let dialogUrlParameters = this.createQueryParameters({
           client_id: this.clientId,
           redirect_uri: redirectUri,
           state: this.getState(),
@@ -94,6 +96,25 @@
       });
     }
 
+    api(path, params, accessToken) {
+      let apiUrlParameters = this.createQueryParameters(params);
+
+      return new Promise((resolve, reject) => {
+        let request = new XMLHttpRequest();
+        request.open('POST', `${this.apiUrl}${path}?${apiUrlParameters}`, true);
+        request.setRequestHeader('Authorization', `Bearer ${accessToken}`);
+        request.onload = event => {
+          let response = JSON.parse(event.target.response);
+          if (response.error) {
+            reject(this.createError(response.error.message));
+          } else {
+            resolve(response);
+          }
+        };
+        request.send();
+      });
+    }
+
     createError(errorMessage) {
       return new Error(errorMessage);
     }
@@ -105,7 +126,7 @@
       });
     }
 
-    getDialogUrlParameters(params) {
+    createQueryParameters(params) {
       return Object.keys(params).map(element => `${element}=${params[element]}`).join('&');
     }
 

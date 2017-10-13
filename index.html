@@ -1,71 +1,27 @@
 <html>
   <head>
-    <title>Facebook Login - Grant type: Code</title>
-    <link rel="stylesheet" href="./app.css">
+    <title>Facebook Login, SSO - Grant type: Code</title>
+    <link rel="stylesheet" href="/app.css">
   </head>
   <body>
     <div id="content">
-      <img src="./logo.svg" alt="Facebook">
-
-      <button onclick="onLogin()">Login with Facebook</button>
-      
-      <!-- Error message -->
-      <div class="error"></div>
-  
-      <!-- Code & State -->
-      <label for="code">Code</label>
-      <input id="code" name="code" type="text" onclick="selectAllText(this)" value="">
-      <label for="state">State</label>
-      <input id="state" name="state" type="text" onclick="selectAllText(this)" value="">
+      <img src="/logo.svg" alt="Facebook">
+      <router-view></router-view>
     </div>
-    
 
     <!-- Scripts -->
-    <script src="./facebook.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <script src="/facebook.js"></script>
     <script>
-      const facebook = new Facebook({
+      window.Facebook = new Facebook({
         clientId: '<PUT_YOUR_CLIENT_ID_HERE>',
         scope: 'email'
       });
-
-      const codeInput = document.querySelector('#code');
-      const stateInput = document.querySelector('#state');
-      const errorDiv = document.querySelector('.error');
-      const errorActiveClass = 'error-active';
-
-      const onLogin = () => {
-        resetError();
-        resetInputs();
-
-        facebook.login()
-          .then(response => onLoginSuccess(response))
-          .catch(error => onLoginError(error))
-      };
-
-      const onLoginSuccess = response => {
-        resetError();
-        codeInput.value = response.code;
-        stateInput.value = response.state;
-      };
-
-      const onLoginError = error => {
-        errorDiv.classList.add(errorActiveClass);
-        errorDiv.innerHTML = error.message;
-      };
-      
-      const selectAllText = (input) => {
-        input.setSelectionRange(0, input.value.length);
-      }
-
-      const resetError = () => {
-        errorDiv.classList.remove(errorActiveClass);
-        errorDiv.innerHTML = '';
-      }
-
-      const resetInputs = () => {
-        codeInput.value = '';
-        stateInput.value = '';
-      }
     </script>
+    <script src="/components/home.js"></script>
+    <script src="/components/access.js"></script>
+    <script src="/components/profile.js"></script>
+    <script src="/app.js"></script>
   </body>
 </html>

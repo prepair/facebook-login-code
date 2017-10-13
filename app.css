@@ -35,6 +35,11 @@ input, button {
   width: 500px;
 }
 
+#home, #access, #profile {
+  display: flex;
+  flex-direction: column;
+}
+
 img {
   display: block;
 }
@@ -57,12 +62,12 @@ button:active {
 }
 
 .error {
-  display: none;
   padding: 20px;
   background: #ffefef;
   color: #983c3c;
   font-size: .8em;
   font-style: italic;
+  overflow-wrap: break-word;
 }
 
 .error-active {
